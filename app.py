@@ -48,24 +48,26 @@ def is_exit(text):
 user_input = st.chat_input("Type your response here...")
 
 if user_input:
+    # 🔴 GLOBAL FALLBACK (ADD THIS FIRST)
+    if user_input.strip() == "":
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": "I didn’t catch that. Could you please enter a valid response?"
+    })
+    st.rerun()
+    # 🔴 EXIT CHECK
     if is_exit(user_input):
         st.session_state.messages.append({
             "role": "assistant",
             "content": "Thank you for your time. Our recruitment team will contact you shortly. Have a great day!"
         })
         st.stop()
-
+    # 🔴 STORE USER MESSAGE
     st.session_state.messages.append({
         "role": "user",
         "content": user_input
     })
 
-if user_input.strip() == "":
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": "I didn’t catch that. Could you please enter a valid response?"
-    })
-    st.rerun()
 
     # ---------- Conversation Flow ----------
     if st.session_state.step == 0:
