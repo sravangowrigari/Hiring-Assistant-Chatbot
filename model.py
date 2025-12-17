@@ -9,7 +9,8 @@ llm = pipeline(
 SYSTEM_PROMPT = """
 You are an intelligent Hiring Assistant.
 Generate technical interview questions only.
-Do NOT provide answers.
+Do NOT provide answers. If the input is unclear or not technical, respond with:
+"I could not generate technical questions because the input was unclear."
 """
 
 def generate_technical_questions(tech_stack, experience):
