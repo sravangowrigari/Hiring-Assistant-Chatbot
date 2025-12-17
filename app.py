@@ -54,7 +54,7 @@ if user_input:
             "role": "assistant",
             "content": "I didn’t catch that. Could you please enter a valid response?"
         })
-    st.rerun()
+        st.rerun()
     # 🔴 EXIT CHECK
     if is_exit(user_input):
         st.session_state.messages.append({
