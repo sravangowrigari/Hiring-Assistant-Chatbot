@@ -1,5 +1,5 @@
 import streamlit as st
-from model import generate_technical_questions
+from model import generate_question_list
 
 st.set_page_config(page_title="TalentScout Hiring Assistant")
 
@@ -24,7 +24,14 @@ if "messages" not in st.session_state:
         }
     ]
 
+if "questions" not in st.session_state:
+    st.session_state.questions = []
 
+if "current_q" not in st.session_state:
+    st.session_state.current_q = 0
+
+if "answers" not in st.session_state:
+    st.session_state.answers = []
 
 # ---------- UI ----------
 st.title("🤖 TalentScout Hiring Assistant")
@@ -33,48 +40,46 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+# ---------- Helpers ----------
+def is_exit(text):
+    return text.lower() in ["exit", "quit", "bye", "stop"]
+
 def is_valid_tech_stack(text):
-    # Reject empty, numbers only, or symbols
     if len(text.strip()) < 3:
         return False
     if all(char.isdigit() or char in ", " for char in text):
         return False
     return True
 
-# Exit keywords
-def is_exit(text):
-    return text.lower() in ["exit", "quit", "bye", "stop"]
-
+# ---------- Input ----------
 user_input = st.chat_input("Type your response here...")
 
 if user_input:
-    # 🔴 GLOBAL FALLBACK (ADD THIS FIRST)
+
+    # GLOBAL FALLBACK
     if user_input.strip() == "":
         st.session_state.messages.append({
             "role": "assistant",
             "content": "I didn’t catch that. Could you please enter a valid response?"
         })
         st.rerun()
-    # 🔴 EXIT CHECK
+
+    # EXIT
     if is_exit(user_input):
         st.session_state.messages.append({
             "role": "assistant",
             "content": "Thank you for your time. Our recruitment team will contact you shortly. Have a great day!"
         })
         st.stop()
-    # 🔴 STORE USER MESSAGE
+
+    # Store user message
     st.session_state.messages.append({
         "role": "user",
         "content": user_input
     })
 
-
     # ---------- Conversation Flow ----------
-    if st.session_state.step == 0:
-        response = "Hello! I’m TalentScout’s Hiring Assistant. What is your full name?"
-        st.session_state.step += 1
-
-    elif st.session_state.step == 1:
+    if st.session_state.step == 1:
         st.session_state.profile["name"] = user_input
         response = "Please provide your email address."
         st.session_state.step += 1
@@ -109,28 +114,7 @@ if user_input:
             response = (
                 "I didn’t quite understand that 🤔\n\n"
                 "Please list your tech stack clearly, for example:\n"
-                "**Python, SQL, Power BI, Django**"
+                "**Python, SQL, Power BI**"
             )
         else:
-            tech_stack = [t.strip() for t in user_input.split(",")]
-            st.session_state.profile["tech_stack"] = tech_stack
-    
-            response = "Thank you. Here are your technical screening questions:\n\n"
-            questions = generate_technical_questions(
-                tech_stack,
-                st.session_state.profile["experience"]
-            )
-    
-            response += questions
-            st.session_state.step += 1
-
-
-    else:
-        response = "Screening completed. Thank you for your participation."
-
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": response
-    })
-
-    st.rerun()
+            tech_stack = [t.strip() for t]()_
