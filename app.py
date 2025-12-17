@@ -25,6 +25,7 @@ if "messages" not in st.session_state:
     ]
 
 
+
 # ---------- UI ----------
 st.title("🤖 TalentScout Hiring Assistant")
 
@@ -32,11 +33,26 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+def is_valid_tech_stack(text):
+    # Reject empty, numbers only, or symbols
+    if len(text.strip()) < 3:
+        return False
+    if all(char.isdigit() or char in ", " for char in text):
+        return False
+    return True
+
 # Exit keywords
 def is_exit(text):
     return text.lower() in ["exit", "quit", "bye", "stop"]
 
 user_input = st.chat_input("Type your response here...")
+
+if user_input.strip() == "":
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": "I didn’t catch that. Could you please enter a valid response?"
+    })
+    st.rerun()
 
 if user_input:
     if is_exit(user_input):
@@ -87,6 +103,13 @@ if user_input:
         st.session_state.step += 1
 
     elif st.session_state.step == 7:
+    if not is_valid_tech_stack(user_input):
+        response = (
+            "I didn’t quite understand that 🤔\n\n"
+            "Please list your tech stack clearly, for example:\n"
+            "**Python, SQL, Power BI, Django**"
+        )
+    else:
         tech_stack = [t.strip() for t in user_input.split(",")]
         st.session_state.profile["tech_stack"] = tech_stack
 
@@ -98,6 +121,7 @@ if user_input:
 
         response += questions
         st.session_state.step += 1
+
 
     else:
         response = "Screening completed. Thank you for your participation."
