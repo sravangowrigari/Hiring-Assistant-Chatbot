@@ -50,10 +50,10 @@ user_input = st.chat_input("Type your response here...")
 if user_input:
     # 🔴 GLOBAL FALLBACK (ADD THIS FIRST)
     if user_input.strip() == "":
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": "I didn’t catch that. Could you please enter a valid response?"
-    })
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": "I didn’t catch that. Could you please enter a valid response?"
+        })
     st.rerun()
     # 🔴 EXIT CHECK
     if is_exit(user_input):
