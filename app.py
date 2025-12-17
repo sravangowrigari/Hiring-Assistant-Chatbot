@@ -117,4 +117,50 @@ if user_input:
                 "**Python, SQL, Power BI**"
             )
         else:
-            tech_stack = [t.strip() for t]()_
+            tech_stack = [t.strip() for t in user_input.split(",")]
+            st.session_state.profile["tech_stack"] = tech_stack
+
+            # Generate questions ONCE
+            st.session_state.questions = generate_question_list(
+                tech_stack,
+                st.session_state.profile["experience"]
+            )
+
+            st.session_state.current_q = 0
+            st.session_state.step = 8
+
+            response = (
+                f"Technical Question 1:\n\n"
+                f"{st.session_state.questions[0]}"
+            )
+
+    elif st.session_state.step == 8:
+        # Store answer
+        st.session_state.answers.append({
+            "question": st.session_state.questions[st.session_state.current_q],
+            "answer": user_input
+        })
+
+        st.session_state.current_q += 1
+
+        if st.session_state.current_q < len(st.session_state.questions):
+            response = (
+                f"Technical Question {st.session_state.current_q + 1}:\n\n"
+                f"{st.session_state.questions[st.session_state.current_q]}"
+            )
+        else:
+            st.session_state.step = 9
+            response = (
+                "✅ Thank you for answering the technical questions.\n\n"
+                "Our recruitment team will review your responses and contact you soon."
+            )
+
+    else:
+        response = "Screening completed."
+
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": response
+    })
+
+    st.rerun()
