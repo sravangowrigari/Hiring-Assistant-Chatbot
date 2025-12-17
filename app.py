@@ -5,7 +5,7 @@ st.set_page_config(page_title="TalentScout Hiring Assistant")
 
 # ---------- Session State ----------
 if "step" not in st.session_state:
-    st.session_state.step = 0
+    st.session_state.step = 1
 
 if "profile" not in st.session_state:
     st.session_state.profile = {}
