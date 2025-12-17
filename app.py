@@ -109,18 +109,18 @@ if user_input:
             "Please list your tech stack clearly, for example:\n"
             "**Python, SQL, Power BI, Django**"
         )
-    else:
-        tech_stack = [t.strip() for t in user_input.split(",")]
-        st.session_state.profile["tech_stack"] = tech_stack
-
-        response = "Thank you. Here are your technical screening questions:\n\n"
-        questions = generate_technical_questions(
-            tech_stack,
-            st.session_state.profile["experience"]
-        )
-
-        response += questions
-        st.session_state.step += 1
+        else:
+            tech_stack = [t.strip() for t in user_input.split(",")]
+            st.session_state.profile["tech_stack"] = tech_stack
+    
+            response = "Thank you. Here are your technical screening questions:\n\n"
+            questions = generate_technical_questions(
+                tech_stack,
+                st.session_state.profile["experience"]
+            )
+    
+            response += questions
+            st.session_state.step += 1
 
 
     else:
