@@ -11,7 +11,19 @@ if "profile" not in st.session_state:
     st.session_state.profile = {}
 
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": (
+                "Hello! 👋 I’m TalentScout’s Hiring Assistant.\n\n"
+                "I’ll ask you a few questions to understand your background "
+                "and technical skills.\n\n"
+                "You can type **exit** at any time to end the conversation.\n\n"
+                "Let’s get started — what is your **full name**?"
+            )
+        }
+    ]
+
 
 # ---------- UI ----------
 st.title("🤖 TalentScout Hiring Assistant")
