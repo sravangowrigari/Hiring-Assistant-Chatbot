@@ -1,39 +1,45 @@
 from transformers import pipeline
 
+# Lightweight model for Streamlit Cloud
 llm = pipeline(
     "text2text-generation",
     model="google/flan-t5-base",
-    max_new_tokens=400
+    max_new_tokens=300
 )
 
-SYSTEM_PROMPT = """
-You are an intelligent Hiring Assistant.
-Generate technical interview questions only.
-Do NOT provide answers. If the input is unclear or not technical, respond with:
-"I could not generate technical questions because the input was unclear."
-"""
+def generate_question_list(tech_stack, experience):
+    """
+    Generate a bounded list of technical questions
+    based on the given tech stack.
+    """
 
-def generate_technical_questions(tech_stack, experience):
     prompt = f"""
 You are a technical interviewer.
 
-Candidate experience: {experience} years  
+Candidate experience: {experience} years
 Technologies: {", ".join(tech_stack)}
 
-STRICT INSTRUCTIONS:
-- For EACH technology, generate EXACTLY 3 technical interview questions
-- Questions MUST be directly related to that technology
-- Do NOT ask HR or behavioral questions
-- Do NOT provide answers
-- Format exactly like this:
+TASK:
+- Generate a MAXIMUM of 5 technical interview questions TOTAL
+- Questions must be strictly related to the listed technologies
+- Mix questions across technologies
+- Do NOT include explanations or answers
+- Do NOT repeat questions
+- Return ONLY a numbered list
 
-<TECHNOLOGY NAME>
+Example:
 1. Question
 2. Question
-3. Question
-
-Begin now.
 """
 
     response = llm(prompt)
-    return response[0]["generated_text"].strip()
+    raw_text = response[0]["generated_text"]
+
+    # Clean & extract questions safely
+    questions = []
+    for line in raw_text.split("\n"):
+        line = line.strip()
+        if line and line[0].isdigit():
+            questions.append(line.split(".", 1)[-1].strip())
+
+    return questions[:5]
