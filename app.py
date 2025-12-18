@@ -64,7 +64,7 @@ if user_input:
         })
         st.rerun()
 
-    # Exit
+    # Exit handling
     if is_exit(user_input):
         st.session_state.messages.append({
             "role": "assistant",
