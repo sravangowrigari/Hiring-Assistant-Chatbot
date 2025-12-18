@@ -18,7 +18,7 @@ if "messages" not in st.session_state:
                 "Hello! 👋 I’m TalentScout’s Hiring Assistant.\n\n"
                 "I’ll ask you a few questions to understand your background "
                 "and technical skills.\n\n"
-                "You can type **exit** at any time to end the conversation.\n\n"
+                "You can type **exit** anytime to end the conversation.\n\n"
                 "Let’s get started — what is your **full name**?"
             )
         }
@@ -56,7 +56,7 @@ user_input = st.chat_input("Type your response here...")
 
 if user_input:
 
-    # GLOBAL FALLBACK
+    # Global empty-input fallback
     if user_input.strip() == "":
         st.session_state.messages.append({
             "role": "assistant",
@@ -64,11 +64,11 @@ if user_input:
         })
         st.rerun()
 
-    # EXIT
+    # Exit
     if is_exit(user_input):
         st.session_state.messages.append({
             "role": "assistant",
-            "content": "Thank you for your time. Our recruitment team will contact you shortly. Have a great day!"
+            "content": "Thank you for your time. Our recruitment team will contact you soon. Have a great day!"
         })
         st.stop()
 
@@ -120,7 +120,6 @@ if user_input:
             tech_stack = [t.strip() for t in user_input.split(",")]
             st.session_state.profile["tech_stack"] = tech_stack
 
-            # Generate questions ONCE
             st.session_state.questions = generate_question_list(
                 tech_stack,
                 st.session_state.profile["experience"]
@@ -135,7 +134,6 @@ if user_input:
             )
 
     elif st.session_state.step == 8:
-        # Store answer
         st.session_state.answers.append({
             "question": st.session_state.questions[st.session_state.current_q],
             "answer": user_input
