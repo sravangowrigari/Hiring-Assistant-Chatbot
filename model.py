@@ -1,5 +1,9 @@
 import streamlit as st
 from transformers import pipeline
+from huggingface_hub import login
+import os
+
+login(token=os.environ.get("HF_TOKEN"))
 
 # Cache model to avoid reload on every rerun
 @st.cache_resource
