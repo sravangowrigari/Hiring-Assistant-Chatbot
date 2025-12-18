@@ -10,7 +10,7 @@ login(token=os.environ.get("HF_TOKEN"))
 def load_model():
     return pipeline(
         "text-generation",
-        model="meta-llama/Llama-3.2-3B-Instruct",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         torch_dtype="auto",
         device_map="auto",
         max_new_tokens=300
